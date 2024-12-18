@@ -1,0 +1,12 @@
+__pycache__/
+venv/
+*.egg-info/
+build/
+*.log
+.venv/
+secrets/
+mysql_data/
+mysql_data.old/
+mysql_dump/
+*.zip
+dashboard.html
