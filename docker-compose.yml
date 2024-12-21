@@ -12,9 +12,12 @@ services:
       # MYSQL_PASSWORD: ...
     volumes:
       # - ./mysql_data:/var/lib/mysql
-      - ${HOME}/code/mysql/MYSQL-DOCKER-DATA-DIR:/var/lib/mysql
+      # - ${HOME}/code/mysql/MYSQL-DOCKER-DATA-DIR:/var/lib/mysql
+      - ${HOME}/code/mysql/.data:/var/lib/mysql
       # - ./mysql_dump:/dump⁄
-      - ${HOME}/code/mysql/MYSQL-INPUT-OUTPUT/:/dump
+      # - ${HOME}/code/mysql/MYSQL-INPUT-OUTPUT/:/dump
+      - ${HOME}/code/mysql/.out/:/out
+      - ${HOME}/code/mysql/.in/:/in
     ports:
       - "3306:3306"
     secrets:
