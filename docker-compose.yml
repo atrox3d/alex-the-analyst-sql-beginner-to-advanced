@@ -36,4 +36,4 @@ services:
 
 secrets:
   mysql_root_password:
-    file: secrets/password.txt
+    file: .secrets/password.txt
