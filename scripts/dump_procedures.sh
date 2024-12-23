@@ -27,11 +27,17 @@ echo "DOCKER_OUTPUT_DIR....: ${DOCKER_OUTPUT_DIR}"
 echo "DATABASE.............: ${DATABASE}"
 echo "SQL_FILE.............: ${SQL_FILE}"
 
+DOCKER_COMMAND_PARTS=(
+    "mysqldump -u root -p"                             # run mysqldump as root
+    "--routines"                                       # backup stored procedures
+    "--no-create-info"                                 #
+    "--no-data"                                        #
+    "--no-create-db"                                   #
+    "--skip-opt"                                       #
+    "--skip-triggers"                                  #
+    "${DATABASE} > /${DOCKER_OUTPUT_DIR}/${SQL_FILE}"  #
+)
+DOCKER_COMMAND="${DOCKER_COMMAND_PARTS[*]}"
+echo "docker compose exec -it db /bin/bash -c" "${DOCKER_COMMAND}"
+docker compose exec -it db /bin/bash -c "${DOCKER_COMMAND}"
 
-echo docker compose exec -it \
-    db /bin/bash -c \
-    "mysqldump -u root -p --routines --no-create-info --no-data --no-create-db --skip-opt --skip-triggers ${DATABASE} > /${DOCKER_OUTPUT_DIR}/${SQL_FILE}"
-
-docker compose exec -it \
-    db /bin/bash -c \
-    "mysqldump -u root -p --routines --no-create-info --no-data --no-create-db --skip-opt --skip-triggers ${DATABASE} > /${DOCKER_OUTPUT_DIR}/${SQL_FILE}"
