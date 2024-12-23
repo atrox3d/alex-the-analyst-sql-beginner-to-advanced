@@ -1,31 +1,20 @@
 #!/usr/bin/env bash
 
-function syntax() {
-    echo "syntax $(basename $0) <database_name> [sql_filename | procedures.sql]"
-    exit 1 
-}
+SCRIPTS_DIR=$(dirname ${BASH_SOURCE})
 
-if [ $# -lt 1 ]
-then
-    syntax
-else
-    DATABASE="${1}"
-fi
+. ${SCRIPTS_DIR}/dump.source
 
-if [ $# -gt 1 ]
-then
-    SQL_FILE="${2}"
-else
-    SQL_FILE="procedures.sql"
-fi
+DATABASE=
+SQL_FILE=
+check_params "${@}"
 
 DOCKER_OUTPUT_DIR=out
 DOCKER_INPUT_DIR=in
 
-echo "DOCKER_INPUT_DIR.....: ${DOCKER_INPUT_DIR}"
-echo "DOCKER_OUTPUT_DIR....: ${DOCKER_OUTPUT_DIR}"
 echo "DATABASE.............: ${DATABASE}"
 echo "SQL_FILE.............: ${SQL_FILE}"
+echo "DOCKER_INPUT_DIR.....: ${DOCKER_INPUT_DIR}"
+echo "DOCKER_OUTPUT_DIR....: ${DOCKER_OUTPUT_DIR}"
 
 DOCKER_COMMAND_PARTS=(
     "mysqldump -u root -p"                             # run mysqldump as root
