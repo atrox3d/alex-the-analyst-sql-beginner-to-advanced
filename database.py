@@ -34,7 +34,7 @@ def get_db(config:dict=get_config()) -> MySQLConnection:
     print(f'GET_DB| {connection.connection_id = }')
     return connection
 
-def exec_statement(stmt:str, db:MySQLConnection=None):
+def exec_statement(stmt:str, db:MySQLConnection=None, commit:bool=False, *args):
     ''' 
     gets new or exiting db connection,
     gets new cursor,
@@ -45,22 +45,23 @@ def exec_statement(stmt:str, db:MySQLConnection=None):
     '''
     db = db or get_db()
     cursor = db.cursor()
-    cursor.execute(stmt)
+    
     result = cursor.fetchall()
-    db.commit()
+    cursor.execute(stmt, args)
+
+    if commit:
+        db.commit()
     cursor.close()
+    
     return result
+
 
 def test_connection(config:dict|None=None) -> tuple:
     ''' 
     tests the connection
     returns user, host, port
     '''
-    if config is not None:
-        db = get_db(config)
-    else:
-        db = get_db()
-
+    db = get_db(config or get_config())
     assert db.is_connected()
     
     db.close()
