@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from webbrowser import get
 
 
 SECRETS_PATH = '.secrets'
@@ -44,3 +45,14 @@ def load_config(
     config_path = Path(secrets_path, config_filename)
     with open(config_path, 'r') as fp:
         return json.load(fp)
+
+def get_default_config(
+        config_filename:str='config.json',
+        secrets_path:str=SECRETS_PATH
+) -> dict:
+    try:
+        print(f'GET_DEFAULT_CONFIG| loading {secrets_path}/{config_filename}')
+        return load_config(config_filename, secrets_path)
+    except:
+        print(f'GET_DEFAULT_CONFIG| loading failed, returning default')
+        return build_config()

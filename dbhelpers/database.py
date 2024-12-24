@@ -1,12 +1,13 @@
 import mysql.connector
 from mysql.connector import MySQLConnection
 
-from dbhelpers.config import build_config, load_config
+from dbhelpers.config import build_config, load_config, get_default_config
 
 
 __DB: MySQLConnection = None
 
-def get_db(config:dict=load_config()) -> MySQLConnection:
+
+def get_db(config:dict=get_default_config()) -> MySQLConnection:
     ''' returns new connection'''
     global __DB
     
@@ -19,41 +20,12 @@ def get_db(config:dict=load_config()) -> MySQLConnection:
     return connection
 
 
-def exec_statement(
-    stmt:str, *args, 
-    db:MySQLConnection=None, 
-    commit:bool=False,
-    # close:bool=False
-):
-    ''' 
-    gets new or exiting db connection,
-    gets new cursor,
-    executes query,
-    commits,
-    closes cursor,
-    returns result
-    '''
-    db = db or get_db()
-    cursor = db.cursor()
-    
-    # print(f'{stmt=}')
-    # print(f'{args=}')
-    cursor.execute(stmt, args)
-    result = cursor.fetchall()
-    
-    if commit:
-        db.commit()
-    cursor.close()
-    
-    return result
-
-
 def test_connection(config:dict|None=None) -> tuple:
     ''' 
     tests the connection
     returns user, host, port
     '''
-    db = get_db(config or build_config())
+    db = get_db(config or get_default_config())
     assert db.is_connected()
     
     db.close()
@@ -65,13 +37,6 @@ def test_connection(config:dict|None=None) -> tuple:
             db.server_host,
             db.server_port,
     )
-
-
-def drop_table(name:str, db:MySQLConnection=None):
-    ''' drops a table '''
-    print(f'DROP_TABLE| dropping {name}')
-    result = exec_statement(f'drop table if exists {name}', db)
-    print(f'DROP_TABLE| {result = }')
 
 
 if __name__ == "__main__":
