@@ -1,10 +1,10 @@
-from dbhelpers.database import get_db
+from dbhelpers.db import get_db
 from mysql.connector import MySQLConnection
 
 
 def exec_statement(
     stmt:str, *args,
-    db:MySQLConnection=get_db(),
+    db:MySQLConnection=None,
     commit:bool=False,
     # close:bool=False
 ):
@@ -16,7 +16,7 @@ def exec_statement(
     closes cursor,
     returns result
     '''
-    # db = db or get_db()
+    db = db or get_db()
     cursor = db.cursor()
 
     # print(f'{stmt=}')
@@ -33,6 +33,7 @@ def exec_statement(
 
 def drop_table(name:str, db:MySQLConnection=None):
     ''' drops a table '''
+    db = db or get_db()
     print(f'DROP_TABLE| dropping {name}')
     result = exec_statement(f'drop table if exists {name}', db)
     print(f'DROP_TABLE| {result = }')

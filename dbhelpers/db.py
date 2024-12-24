@@ -11,13 +11,14 @@ def get_db(config:dict=get_default_config()) -> MySQLConnection:
     ''' returns new connection'''
     global __DB
     
+    print(f'GET_DB| {config = }')
+    
     if __DB is None or not __DB.is_connected():
-        connection = mysql.connector.connect(**config )
-        __DB = connection
-    else:
-        connection = __DB
-    print(f'GET_DB| {connection.connection_id = }')
-    return connection
+        __DB = mysql.connector.connect(**config )
+    
+    print(f'GET_DB| {__DB.connection_id = }')
+    print(f'GET_DB| {__DB.database = }')
+    return __DB
 
 
 def test_connection(config:dict|None=None) -> tuple:

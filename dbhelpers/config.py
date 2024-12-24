@@ -1,6 +1,5 @@
 import json
 from pathlib import Path
-from webbrowser import get
 
 
 SECRETS_PATH = '.secrets'
