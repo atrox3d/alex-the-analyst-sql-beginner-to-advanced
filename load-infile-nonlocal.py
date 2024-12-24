@@ -1,5 +1,6 @@
 from pathlib import Path
 from dbhelpers.db import get_db
+from dbhelpers.config import get_default_config
 
 
 LOCAL_IN_PATH = '../.share'
@@ -7,12 +8,9 @@ INFILE = 'filename.csv'
 
 local_outfile = Path(LOCAL_IN_PATH, INFILE)
 
-# if local_outfile.exists():
-#     print(f'{local_outfile} exists, removing...')
-#     local_outfile.unlink()
-
-db = get_db()
-db.database = 'jpassion'
+config = get_default_config()
+config['database'] = 'jpassion'
+db = get_db(config)
 cursor = db.cursor()
 
 cursor.execute("""-- sql
