@@ -2,13 +2,14 @@ from pathlib import Path
 import mysql.connector
 from mysql.connector import MySQLConnection
 
+
 __DB: MySQLConnection = None
 
 def get_password(password_path:str='.secrets/password.txt') -> str:
     return Path(password_path).read_text().strip()
 
 
-def build_config(
+def build_connector_config(
         host:str='localhost', 
         user:str='root', 
         password:str=get_password(),
@@ -22,7 +23,7 @@ def build_config(
     )
 
 
-def get_db(config:dict=build_config()) -> MySQLConnection:
+def get_db(config:dict=build_connector_config()) -> MySQLConnection:
     ''' returns new connection'''
     global __DB
     
@@ -33,6 +34,7 @@ def get_db(config:dict=build_config()) -> MySQLConnection:
         connection = __DB
     print(f'GET_DB| {connection.connection_id = }')
     return connection
+
 
 def exec_statement(
     stmt:str, *args, 
@@ -68,7 +70,7 @@ def test_connection(config:dict|None=None) -> tuple:
     tests the connection
     returns user, host, port
     '''
-    db = get_db(config or build_config())
+    db = get_db(config or build_connector_config())
     assert db.is_connected()
     
     db.close()
