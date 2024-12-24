@@ -1,6 +1,4 @@
 from dbhelpers.database import get_db
-
-
 from mysql.connector import MySQLConnection
 
 
