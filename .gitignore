@@ -1,1 +1,8 @@
-.secrets
+__pycache__/
+venv/
+*.egg-info/
+build/
+*.log
+.venv/
+.secrets/
+

@@ -8,7 +8,7 @@ def get_password(password_path:str='.secrets/password.txt') -> str:
     return Path(password_path).read_text().strip()
 
 
-def get_config(
+def build_config(
         host:str='localhost', 
         user:str='root', 
         password:str=get_password(),
@@ -22,10 +22,10 @@ def get_config(
     )
 
 
-def get_db(config:dict=get_config()) -> MySQLConnection:
+def get_db(config:dict=build_config()) -> MySQLConnection:
     ''' returns new connection'''
     global __DB
-
+    
     if __DB is None or not __DB.is_connected():
         connection = mysql.connector.connect(**config )
         __DB = connection
@@ -34,7 +34,12 @@ def get_db(config:dict=get_config()) -> MySQLConnection:
     print(f'GET_DB| {connection.connection_id = }')
     return connection
 
-def exec_statement(stmt:str, db:MySQLConnection=None, commit:bool=False, *args):
+def exec_statement(
+    stmt:str, *args, 
+    db:MySQLConnection=None, 
+    commit:bool=False,
+    # close:bool=False
+):
     ''' 
     gets new or exiting db connection,
     gets new cursor,
@@ -46,9 +51,11 @@ def exec_statement(stmt:str, db:MySQLConnection=None, commit:bool=False, *args):
     db = db or get_db()
     cursor = db.cursor()
     
-    result = cursor.fetchall()
+    # print(f'{stmt=}')
+    # print(f'{args=}')
     cursor.execute(stmt, args)
-
+    result = cursor.fetchall()
+    
     if commit:
         db.commit()
     cursor.close()
@@ -61,13 +68,13 @@ def test_connection(config:dict|None=None) -> tuple:
     tests the connection
     returns user, host, port
     '''
-    db = get_db(config or get_config())
+    db = get_db(config or build_config())
     assert db.is_connected()
     
     db.close()
     print(db.is_connected())
     assert not db.is_connected()
-
+    
     return(
             db.user,
             db.server_host,
