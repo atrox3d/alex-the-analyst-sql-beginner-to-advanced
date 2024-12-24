@@ -1,29 +1,12 @@
-from pathlib import Path
 import mysql.connector
 from mysql.connector import MySQLConnection
+
+from dbhelpers.config import build_config, load_config
 
 
 __DB: MySQLConnection = None
 
-def get_password(password_path:str='.secrets/password.txt') -> str:
-    return Path(password_path).read_text().strip()
-
-
-def build_connector_config(
-        host:str='localhost', 
-        user:str='root', 
-        password:str=get_password(),
-        database:str|None=None
-) -> dict:
-    return dict(
-        host=host,
-        user=user,
-        password=password,
-        database=database
-    )
-
-
-def get_db(config:dict=build_connector_config()) -> MySQLConnection:
+def get_db(config:dict=load_config()) -> MySQLConnection:
     ''' returns new connection'''
     global __DB
     
@@ -70,7 +53,7 @@ def test_connection(config:dict|None=None) -> tuple:
     tests the connection
     returns user, host, port
     '''
-    db = get_db(config or build_connector_config())
+    db = get_db(config or build_config())
     assert db.is_connected()
     
     db.close()
