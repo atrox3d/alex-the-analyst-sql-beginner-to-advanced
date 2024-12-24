@@ -1,8 +1,10 @@
 import json
+import logging
 from pathlib import Path
 
 
 SECRETS_PATH = '.secrets'
+logger = logging.getLogger(__name__)
 
 
 def get_password(
@@ -50,8 +52,8 @@ def get_default_config(
         secrets_path:str=SECRETS_PATH
 ) -> dict:
     try:
-        print(f'GET_DEFAULT_CONFIG| loading {secrets_path}/{config_filename}')
+        logger.info(f'loading {secrets_path}/{config_filename}')
         return load_config(config_filename, secrets_path)
     except:
-        print(f'GET_DEFAULT_CONFIG| loading failed, returning default')
+        logger.warning(f'loading failed, returning default')
         return build_config()

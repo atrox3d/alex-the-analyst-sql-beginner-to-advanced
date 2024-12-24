@@ -1,6 +1,8 @@
+import logging
 from dbhelpers.db import get_db
 from mysql.connector import MySQLConnection
 
+logger = logging.getLogger(__name__)
 
 def exec_statement(
     stmt:str, *args,
@@ -34,6 +36,6 @@ def exec_statement(
 def drop_table(name:str, db:MySQLConnection=None):
     ''' drops a table '''
     db = db or get_db()
-    print(f'DROP_TABLE| dropping {name}')
+    logger.info(f'dropping table: {name}')
     result = exec_statement(f'drop table if exists {name}', db)
-    print(f'DROP_TABLE| {result = }')
+    logger.info(f'{result = }')

@@ -1,8 +1,10 @@
+import logging
+
 import mysql.connector
 from mysql.connector import MySQLConnection
-
 from dbhelpers.config import build_config, load_config, get_default_config
 
+logger = logging.getLogger(__name__)
 
 __DB: MySQLConnection = None
 
@@ -11,13 +13,13 @@ def get_db(config:dict=get_default_config()) -> MySQLConnection:
     ''' returns new connection'''
     global __DB
     
-    print(f'GET_DB| {config = }')
+    logger.debug(f'{config = }')
     
     if __DB is None or not __DB.is_connected():
         __DB = mysql.connector.connect(**config )
     
-    print(f'GET_DB| {__DB.connection_id = }')
-    print(f'GET_DB| {__DB.database = }')
+    logger.debug(f'{__DB.connection_id = }')
+    logger.debug(f'{__DB.database = }')
     return __DB
 
 
@@ -30,7 +32,7 @@ def test_connection(config:dict|None=None) -> tuple:
     assert db.is_connected()
     
     db.close()
-    print(db.is_connected())
+    print(f'{db.is_connected() = }')
     assert not db.is_connected()
     
     return(
