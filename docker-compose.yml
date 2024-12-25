@@ -18,6 +18,7 @@ services:
       # - ${HOME}/code/mysql/MYSQL-INPUT-OUTPUT/:/dump
       - ${HOME}/code/mysql/.out/:/out
       - ${HOME}/code/mysql/.in/:/in
+      - ${HOME}/code/mysql/.share/:/var/lib/mysql-files
     ports:
       - "3306:3306"
     secrets:
