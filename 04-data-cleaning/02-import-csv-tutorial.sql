@@ -31,19 +31,27 @@ LINES TERMINATED BY
 ignore 
     1 lines
 (
-    company
-    , location
-    , industry
+    @company
+    , @location
+    , @industry
     , @total
-    , percentage_laid_off
-    , date
-    , country
-    , stage
+    -- , percentage_laid_off
+    , @percentage
+    , @date
+    , @country
+    , @stage
     , @funds
 )
 set 
-    total_laid_off = if(@total = 'NULL', null, @total)
+      company               = if(@company       = 'NULL', null, @company)
+    , location              = if(@location      = 'NULL', null, @location)
+    , industry              = if(@industry      = 'NULL', null, @industry)
+    , total_laid_off        = if(@total         = 'NULL', null, @total)
+    , percentage_laid_off   = if(@percentage    = 'NULL', null, @percentage)
+    , date                  = if(@date          = 'NULL', null, @date)
+    , country               = if(@country       = 'NULL', null, @country)
+    , stage                 = if(@stage         = 'NULL', null, @stage)
+    , funds_raised_millions = if(left(@funds,1) = 'N'   , null, @funds)
     -- , percentage_laid_off = if(@percentage = 'NULL', null, @percentage)
     -- , date = if(@date = 'NULL', null, STR_TO_DATE(@date, '%m/%d/%Y'))
-    , funds_raised_millions = if(left(@funds,1) = 'N', null, @funds)
 ;
