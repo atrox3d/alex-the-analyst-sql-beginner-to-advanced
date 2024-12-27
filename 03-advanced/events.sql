@@ -20,3 +20,4 @@ begin
 end //
 delimiter ;
 
+drop event if exists evey_minute;
